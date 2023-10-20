@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">StockAIApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="stock_code">%s</string>
+    <string name="forecast">Dự đoán</string>
+    <string name="info">Thông tin</string>
+    <string name="info_what_is_stock">Dự đoán chứng khoán là gì ?</string>
+    <string name="info_principle_of_operation">Nguyên tắc hoạt động</string>
+    <string name="info_usage_model">Mô hình sử dụng</string>
+    <string name="open">Mở cửa</string>
+    <string name="close">Đóng cửa</string>
+    <string name="max">Cao nhất</string>
+    <string name="max_in_three_month">Cao nhất trong 3 tháng</string>
+    <string name="min">Thấp nhất</string>
+    <string name="min_in_three_month">Thấp nhất trong 3 tháng</string>
+    <string name="weight">Khối lượng</string>
+    <string name="average_volume">KLGD bình quân</string>
+    <string name="stock_code_info">Thông tin mã chứng khoán</string>
+</resources>
