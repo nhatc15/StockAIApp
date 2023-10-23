@@ -145,7 +145,7 @@ class ForecastFragment : Fragment() {
 
                     Mode.GET_TOTAL -> {
                         chunk.forEach {
-                            totalVolume += it
+                            totalVolume = it
                         }
                     }
                 }
