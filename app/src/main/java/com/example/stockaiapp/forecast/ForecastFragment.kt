@@ -105,9 +105,11 @@ class ForecastFragment : Fragment() {
         viewModel.updateStockCode(companyData.first())
 
         binding.apply {
-            autoCompleteTextView.setText(getString(R.string.stock_code, companyData.first().ticker))
-            autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
-                viewModel.updateStockCode(companyData[position])
+            autoCompleteTextView.apply {
+                setText(getString(R.string.stock_code, companyData.first().ticker))
+                setOnItemClickListener { parent, view, position, id ->
+                    viewModel.updateStockCode(companyData[position])
+                }
             }
         }
 

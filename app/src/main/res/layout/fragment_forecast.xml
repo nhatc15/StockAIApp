@@ -318,7 +318,6 @@
             android:textColor="@color/teal_700"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:inputType="none"
             android:layout_weight="1"
             tools:ignore="LabelFor" />
     </com.google.android.material.textfield.TextInputLayout>
