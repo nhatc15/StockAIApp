@@ -15,6 +15,7 @@ import com.example.stockaiapp.model.Company
 import com.example.stockaiapp.model.Mode
 import com.example.stockaiapp.model.StockForecastContent
 import com.example.stockaiapp.model.StockInfo
+import com.example.stockaiapp.util.Const
 import com.example.stockaiapp.util.readJSONFromAssets
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
@@ -86,7 +87,7 @@ class ForecastFragment : Fragment() {
                     setTextColor(textColor)
                 }
                 tvLastDay.text = content.date
-                tvLastTimeUpdated.text = String.format("Cập nhật lần cuối ngày %s", content.date)
+                tvLastTimeUpdated.text = Const.UPDATE_LAST_TIME + content.date
                 tvMaxInThreeMonthValue.text = content.maxInThreeMonth
                 tvMinInThreeMonthValue.text = content.minInThreeMonth
                 tvWeightValue.text = content.totalVolume
@@ -98,7 +99,7 @@ class ForecastFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val companyJsonString = readJSONFromAssets(requireContext(), "list_com1.json")
+        val companyJsonString = readJSONFromAssets(requireContext(), Const.COMPANY_JSON_FILE_NAME)
         companyData = Gson().fromJson(companyJsonString, Company::class.java)
 
         viewModel.updateStockCode(companyData.first())
