@@ -321,7 +321,6 @@
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:layout_weight="1"
-            android:inputType="none"
             tools:ignore="LabelFor" />
     </com.google.android.material.textfield.TextInputLayout>
 
