@@ -15,6 +15,7 @@ import com.example.stockaiapp.model.Company
 import com.example.stockaiapp.model.Mode
 import com.example.stockaiapp.model.StockForecastContent
 import com.example.stockaiapp.model.StockInfo
+import com.example.stockaiapp.util.hideKeyboard
 import com.example.stockaiapp.util.Const
 import com.example.stockaiapp.util.readJSONFromAssets
 import com.google.gson.Gson
@@ -103,13 +104,12 @@ class ForecastFragment : Fragment() {
         companyData = Gson().fromJson(companyJsonString, Company::class.java)
 
         viewModel.updateStockCode(companyData.first())
-
         binding.apply {
-            autoCompleteTextView.apply {
-                setText(getString(R.string.stock_code, companyData.first().ticker))
-                setOnItemClickListener { parent, view, position, id ->
-                    viewModel.updateStockCode(companyData[position])
-                }
+            autoCompleteTextView.setText(getString(R.string.stock_code, companyData.first().ticker))
+            autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+                viewModel.updateStockCode(companyData[position])
+                autoCompleteTextView.clearFocus()
+                this@ForecastFragment.hideKeyboard()
             }
         }
 
@@ -148,7 +148,7 @@ class ForecastFragment : Fragment() {
 
                     Mode.GET_TOTAL -> {
                         chunk.forEach {
-                            totalVolume += it
+                            totalVolume = it
                         }
                     }
                 }
