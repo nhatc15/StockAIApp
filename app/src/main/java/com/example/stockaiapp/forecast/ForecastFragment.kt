@@ -15,9 +15,13 @@ import com.example.stockaiapp.model.Company
 import com.example.stockaiapp.model.Mode
 import com.example.stockaiapp.model.StockForecastContent
 import com.example.stockaiapp.model.StockInfo
-import com.example.stockaiapp.util.hideKeyboard
 import com.example.stockaiapp.util.Const
+import com.example.stockaiapp.util.hideKeyboard
 import com.example.stockaiapp.util.readJSONFromAssets
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.joinAll
@@ -38,6 +42,11 @@ class ForecastFragment : Fragment() {
     ): View {
         _binding = FragmentForecastBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[ForecastViewModel::class.java]
+
+        binding.lineChart.apply {
+            isDragEnabled = true
+            setScaleEnabled(true)
+        }
 
         viewModel.company.observe(viewLifecycleOwner) {
             it?.let {
@@ -93,6 +102,26 @@ class ForecastFragment : Fragment() {
                 tvMinInThreeMonthValue.text = content.minInThreeMonth
                 tvWeightValue.text = content.totalVolume
                 tvAverageVolumeValue.text = content.averageVolume
+
+                val yValue: ArrayList<Entry> = ArrayList()
+                stockInfo?.let {
+                    val values = mutableListOf<String>()
+                    for (i in 0..<stockInfo.takeLast(30).size) {
+                        yValue.add(Entry(i.toFloat(), stockInfo.takeLast(30)[i].Close.toFloat()))
+                        values.add(stockInfo.takeLast(30)[i].Date)
+                    }
+                    val set1 = LineDataSet(yValue, "Close")
+
+                    set1.fillAlpha = 110
+                    val dataSets: ArrayList<ILineDataSet> = ArrayList()
+                    dataSets.add(set1)
+
+                    val data = LineData(dataSets)
+                    lineChart.data = data
+                    lineChart.invalidate()
+                    lineChart.setScaleEnabled(true)
+                    lineChart.setPinchZoom(true)
+                }
             }
         }
         return binding.root
