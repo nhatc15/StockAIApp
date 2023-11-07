@@ -126,11 +126,15 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
             yValue.add(Entry(i.toFloat(), stockInfo.takeLast(90)[i].Close.toFloat()))
             values.add(stockInfo.takeLast(90)[i].Date.replace("2023-", ""))
         }
-        val set1 = LineDataSet(yValue, "Close")
+        val set = LineDataSet(yValue, "Close")
 
-        set1.fillAlpha = 110
+        set.fillAlpha = 110
+        set.setDrawValues(false)
+        set.setDrawCircles(false)
+        set.setDrawCircleHole(false)
+        set.setDrawFilled(true)
         val dataSets: ArrayList<ILineDataSet> = ArrayList()
-        dataSets.add(set1)
+        dataSets.add(set)
 
         val data = LineData(dataSets)
         binding.lineChart.apply {
