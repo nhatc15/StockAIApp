@@ -148,6 +148,12 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
         }
         val predictSet = LineDataSet(predictYValue, "Close")
         predictSet.color = Color.MAGENTA
+        predictSet.fillColor = Color.MAGENTA
+        predictSet.fillAlpha = 110
+        predictSet.setDrawValues(false)
+        predictSet.setDrawCircles(false)
+        predictSet.setDrawCircleHole(false)
+        predictSet.setDrawFilled(true)
         dataSets.add(predictSet)
 
         val data = LineData(dataSets)
