@@ -15,7 +15,17 @@ import com.example.stockaiapp.model.Company
 import com.example.stockaiapp.model.Mode
 import com.example.stockaiapp.model.StockForecastContent
 import com.example.stockaiapp.model.StockInfo
+import com.example.stockaiapp.util.Const
+import com.example.stockaiapp.util.hideKeyboard
 import com.example.stockaiapp.util.readJSONFromAssets
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.joinAll
@@ -23,19 +33,23 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
-class ForecastFragment : Fragment() {
+class ForecastFragment : Fragment(), OnChartValueSelectedListener {
     private var _binding: FragmentForecastBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: ForecastViewModel
     private lateinit var companyData: Company
 
-    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentForecastBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[ForecastViewModel::class.java]
+
+        binding.lineChart.apply {
+            isDragEnabled = true
+            setScaleEnabled(true)
+        }
 
         viewModel.company.observe(viewLifecycleOwner) {
             it?.let {
@@ -49,67 +63,119 @@ class ForecastFragment : Fragment() {
         }
 
         viewModel.stockInfo.observe(viewLifecycleOwner) { stockInfo ->
-            binding.apply {
-                val content = getStockForecastContent(stockInfo)
-                val textColor = when {
-                    content.changeValue > 0 -> Color.GREEN
-                    content.changeValue < 0 -> Color.RED
-                    else -> Color.rgb(255, 215, 0)
-                }
-                tvLastPrice.apply {
-                    text = content.closePrice
-                    setTextColor(textColor)
-                }
-                tvProfitabilityRate.apply {
-                    text = String.format(
-                        "%s(%.2f)",
-                        abs(content.changeValue).toString().formatValueString(),
-                        abs(content.changeRate)
-                    ) + "%"
-                    setTextColor(textColor)
-                }
-                tvLastDay.text = content.date
-                tvOpenValue.apply {
-                    text = content.openPrice
-                    setTextColor(textColor)
-                }
-                tvCloseValue.apply {
-                    text = content.closePrice
-                    setTextColor(textColor)
-                }
-                tvMaxValue.apply {
-                    text = content.maxPrice
-                    setTextColor(textColor)
-                }
-                tvMinValue.apply {
-                    text = content.minPrice
-                    setTextColor(textColor)
-                }
-                tvLastDay.text = content.date
-                tvLastTimeUpdated.text = String.format("Cập nhật lần cuối ngày %s", content.date)
-                tvMaxInThreeMonthValue.text = content.maxInThreeMonth
-                tvMinInThreeMonthValue.text = content.minInThreeMonth
-                tvWeightValue.text = content.totalVolume
-                tvAverageVolumeValue.text = content.averageVolume
-            }
+            invalidateData(stockInfo)
         }
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
+    fun invalidateData(stockInfo: StockInfo?) {
+        binding.apply {
+            val content = getStockForecastContent(stockInfo)
+            val textColor = when {
+                content.changeValue > 0 -> Color.GREEN
+                content.changeValue < 0 -> Color.RED
+                else -> Color.rgb(255, 215, 0)
+            }
+            tvLastPrice.apply {
+                text = content.closePrice
+                setTextColor(textColor)
+            }
+            tvProfitabilityRate.apply {
+                text = String.format(
+                    "%s(%.2f)",
+                    abs(content.changeValue).toString().formatValueString(),
+                    abs(content.changeRate)
+                ) + "%"
+                setTextColor(textColor)
+            }
+            tvLastDay.text = content.date
+            tvOpenValue.apply {
+                text = content.openPrice
+                setTextColor(textColor)
+            }
+            tvCloseValue.apply {
+                text = content.closePrice
+                setTextColor(textColor)
+            }
+            tvMaxValue.apply {
+                text = content.maxPrice
+                setTextColor(textColor)
+            }
+            tvMinValue.apply {
+                text = content.minPrice
+                setTextColor(textColor)
+            }
+            tvLastDay.text = content.date
+            tvLastTimeUpdated.text = Const.UPDATE_LAST_TIME.plus(content.date)
+            tvMaxInThreeMonthValue.text = content.maxInThreeMonth
+            tvMinInThreeMonthValue.text = content.minInThreeMonth
+            tvWeightValue.text = content.totalVolume
+            tvAverageVolumeValue.text = content.averageVolume
+
+            stockInfo?.let {
+                setLineChart(it)
+            }
+        }
+    }
+
+    private fun setLineChart(stockInfo: StockInfo) {
+        val values = mutableListOf<String>()
+        val yValue: ArrayList<Entry> = ArrayList()
+        for (i in 0..<90) {
+            yValue.add(Entry(i.toFloat(), stockInfo.takeLast(90)[i].Close.toFloat()))
+            values.add(stockInfo.takeLast(90)[i].Date.replace("2023-", ""))
+        }
+        val set = LineDataSet(yValue, "Close")
+
+        set.fillAlpha = 110
+        set.setDrawValues(false)
+        set.setDrawCircles(false)
+        set.setDrawCircleHole(false)
+        set.setDrawFilled(true)
+        val dataSets: ArrayList<ILineDataSet> = ArrayList()
+        dataSets.add(set)
+
+        val data = LineData(dataSets)
+        binding.lineChart.apply {
+            this.setOnChartValueSelectedListener(this@ForecastFragment)
+            this.data = data
+            this.invalidate()
+            this.setScaleEnabled(true)
+            this.isDragEnabled = true
+            this.setPinchZoom(true)
+            this.description.isEnabled = false
+
+            val xAxis: XAxis = this.xAxis
+            xAxis.valueFormatter = MyAxisValueFormatter(values)
+            xAxis.granularity = 1f
+        }
+    }
+
+    data class MyAxisValueFormatter(
+        private val mValue: MutableList<String>
+    ) : IndexAxisValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return mValue[value.toInt()]
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val companyJsonString = readJSONFromAssets(requireContext(), "list_com1.json")
+        val companyJsonString = readJSONFromAssets(requireContext(), Const.COMPANY_JSON_FILE_NAME)
         companyData = Gson().fromJson(companyJsonString, Company::class.java)
 
         viewModel.updateStockCode(companyData.first())
-
         binding.apply {
-            autoCompleteTextView.setText(getString(R.string.stock_code, companyData.first().ticker))
-            autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
-                viewModel.updateStockCode(companyData[position])
+            autoCompleteTextView.apply {
+                setText(getString(R.string.stock_code, companyData.first().ticker))
+                setOnItemClickListener { parent, view, position, id ->
+                    viewModel.updateStockCode(companyData[position])
+                    autoCompleteTextView.clearFocus()
+                    this@ForecastFragment.hideKeyboard()
+                }
             }
         }
-
     }
 
     override fun onResume() {
@@ -206,5 +272,21 @@ class ForecastFragment : Fragment() {
             stringBuilder.append(reversed[i])
         }
         return stringBuilder.reverse().toString()
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onValueSelected(e: Entry?, h: Highlight?) {
+        binding.apply {
+            val item = viewModel.stockInfo.value?.takeLast(90)?.get(e?.x?.toInt() ?: 0)
+            item?.let {
+                tvCloseInfo.text = "Close: ${item.Close}"
+                tvOpenInfo.text = "Open: ${item.Open}"
+                tvMaxInfo.text = "Max: ${item.High}"
+                tvMinInfo.text = "Min: ${item.Low}"
+            }
+        }
+    }
+
+    override fun onNothingSelected() {
     }
 }
