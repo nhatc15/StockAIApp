@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.stockaiapp.model.CompanyItem
+import com.example.stockaiapp.model.Predict
 import com.example.stockaiapp.model.StockInfo
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -14,8 +15,8 @@ class ForecastViewModel : ViewModel() {
     private val _company = MutableLiveData<CompanyItem?>()
     val company: LiveData<CompanyItem?> = _company
 
-    private val _stockInfo = MutableLiveData<StockInfo?>()
-    val stockInfo: LiveData<StockInfo?> = _stockInfo
+    private val _stockInfo = MutableLiveData<Pair<StockInfo?, Predict?>>()
+    val stockInfo: LiveData<Pair<StockInfo?, Predict?>> = _stockInfo
 
     fun updateStockCode(companyItem: CompanyItem) {
         viewModelScope.launch {
@@ -23,15 +24,22 @@ class ForecastViewModel : ViewModel() {
         }
     }
 
-    fun getStockInfo(stockInfoJsonString: String?) {
+    fun getStockInfo(stockInfoJsonString: String?, predictJsonString: String?) {
         viewModelScope.launch {
-            _stockInfo.value =
-                stockInfoJsonString?.let {
+            _stockInfo.value = Pair(
+                first = stockInfoJsonString?.let {
                     Gson().fromJson(
-                        stockInfoJsonString,
+                        it,
                         StockInfo::class.java
                     )
+                },
+                second = predictJsonString?.let {
+                    Gson().fromJson(
+                        it,
+                        Predict::class.java
+                    )
                 }
+            )
         }
     }
 }

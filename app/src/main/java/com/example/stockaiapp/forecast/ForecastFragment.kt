@@ -13,6 +13,7 @@ import com.example.stockaiapp.R
 import com.example.stockaiapp.databinding.FragmentForecastBinding
 import com.example.stockaiapp.model.Company
 import com.example.stockaiapp.model.Mode
+import com.example.stockaiapp.model.Predict
 import com.example.stockaiapp.model.StockForecastContent
 import com.example.stockaiapp.model.StockInfo
 import com.example.stockaiapp.util.Const
@@ -57,7 +58,12 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
                     tvStockCodeInfoContent.text = it.info
                     val stockInfoJsonString: String? =
                         readJSONFromAssets(requireContext(), "data/data_${it.ticker}.json")
-                    viewModel.getStockInfo(stockInfoJsonString)
+                    val predictJsonString: String? =
+                        readJSONFromAssets(
+                            requireContext(),
+                            "closepredict/datapredict_${it.ticker}.json"
+                        )
+                    viewModel.getStockInfo(stockInfoJsonString, predictJsonString)
                 }
             }
         }
@@ -69,9 +75,9 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
     }
 
     @SuppressLint("SetTextI18n")
-    fun invalidateData(stockInfo: StockInfo?) {
+    fun invalidateData(stockInfo: Pair<StockInfo?, Predict?>) {
         binding.apply {
-            val content = getStockForecastContent(stockInfo)
+            val content = getStockForecastContent(stockInfo.first)
             val textColor = when {
                 content.changeValue > 0 -> Color.GREEN
                 content.changeValue < 0 -> Color.RED
@@ -113,13 +119,13 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
             tvWeightValue.text = content.totalVolume
             tvAverageVolumeValue.text = content.averageVolume
 
-            stockInfo?.let {
-                setLineChart(it)
+            if (stockInfo.first != null && stockInfo.second != null) {
+                setLineChart(stockInfo.first!!, stockInfo.second!!)
             }
         }
     }
 
-    private fun setLineChart(stockInfo: StockInfo) {
+    private fun setLineChart(stockInfo: StockInfo, predict: Predict) {
         val values = mutableListOf<String>()
         val yValue: ArrayList<Entry> = ArrayList()
         for (i in 0..<90) {
@@ -127,7 +133,6 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
             values.add(stockInfo.takeLast(90)[i].Date.replace("2023-", ""))
         }
         val set = LineDataSet(yValue, "Close")
-
         set.fillAlpha = 110
         set.setDrawValues(false)
         set.setDrawCircles(false)
@@ -135,6 +140,15 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
         set.setDrawFilled(true)
         val dataSets: ArrayList<ILineDataSet> = ArrayList()
         dataSets.add(set)
+
+        val predictYValue: ArrayList<Entry> = ArrayList()
+        predict.toList().forEachIndexed { index, i ->
+            predictYValue.add(Entry((index + 89).toFloat(), i.`0`.toFloat()))
+            values.add("")
+        }
+        val predictSet = LineDataSet(predictYValue, "Close")
+        predictSet.color = Color.MAGENTA
+        dataSets.add(predictSet)
 
         val data = LineData(dataSets)
         binding.lineChart.apply {
@@ -277,7 +291,7 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
     @SuppressLint("SetTextI18n")
     override fun onValueSelected(e: Entry?, h: Highlight?) {
         binding.apply {
-            val item = viewModel.stockInfo.value?.takeLast(90)?.get(e?.x?.toInt() ?: 0)
+            val item = viewModel.stockInfo.value?.first?.takeLast(90)?.get(e?.x?.toInt() ?: 0)
             item?.let {
                 tvCloseInfo.text = "Close: ${item.Close}"
                 tvOpenInfo.text = "Open: ${item.Open}"
