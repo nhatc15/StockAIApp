@@ -2,6 +2,8 @@ package com.example.stockaiapp.forecast
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.Color.MAGENTA
+import android.graphics.Color.RED
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -138,9 +140,10 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
         }
         val set = LineDataSet(yValue, "Close")
         set.fillAlpha = 110
+        set.color = RED
         set.setDrawValues(false)
-        set.setDrawCircles(false)
-        set.setDrawCircleHole(false)
+        set.fillColor = RED
+        set.setCircleColor(Color.RED)
         set.setDrawFilled(true)
         val dataSets: ArrayList<ILineDataSet> = ArrayList()
         dataSets.add(set)
@@ -150,13 +153,12 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
             for (i in 0..<predictData.size) {
                 predictYValue.add(Entry((i+89).toFloat(), predictData[i].`0`.toFloat()))
             }
-            val predictSet = LineDataSet(predictYValue, "Close")
-            predictSet.color = Color.MAGENTA
-            predictSet.fillColor = Color.MAGENTA
+            val predictSet = LineDataSet(predictYValue, "Predict")
+            predictSet.color = MAGENTA
+            predictSet.setCircleColor(MAGENTA)
+            predictSet.fillColor = MAGENTA
             predictSet.fillAlpha = 110
             predictSet.setDrawValues(false)
-            predictSet.setDrawCircles(false)
-            predictSet.setDrawCircleHole(false)
             predictSet.setDrawFilled(true)
             dataSets.add(predictSet)
         }
