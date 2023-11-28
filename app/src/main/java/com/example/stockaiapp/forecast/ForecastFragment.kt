@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Color.MAGENTA
 import android.graphics.Color.RED
+import android.graphics.Color.WHITE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -128,7 +129,9 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
     }
 
     private fun setLineChart(stockInfo: StockInfo, predict: Predict?) {
-        binding.lineChart.clear()
+        binding.lineChart.xAxis.textColor = WHITE
+        binding.lineChart.axisLeft.textColor = WHITE
+        binding.lineChart.axisRight.textColor = WHITE
         val values = mutableListOf<String>()
         val yValue: ArrayList<Entry> = ArrayList()
         for (i in 0..<90) {
@@ -139,27 +142,31 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
             values.add("")
         }
         val set = LineDataSet(yValue, "Close")
-        set.fillAlpha = 110
-        set.color = RED
-        set.setDrawValues(false)
-        set.fillColor = RED
-        set.setCircleColor(Color.RED)
-        set.setDrawFilled(true)
+        set.apply {
+            fillAlpha = 110
+            set.valueTextColor = WHITE
+            color = RED
+            setDrawValues(false)
+            fillColor = RED
+            setCircleColor(Color.RED)
+            setDrawFilled(true)
+        }
         val dataSets: ArrayList<ILineDataSet> = ArrayList()
         dataSets.add(set)
-
         predict?.let { predictData ->
             val predictYValue: ArrayList<Entry> = ArrayList()
             for (i in 0..<predictData.size) {
                 predictYValue.add(Entry((i+89).toFloat(), predictData[i].`0`.toFloat()))
             }
             val predictSet = LineDataSet(predictYValue, "Predict")
-            predictSet.color = MAGENTA
-            predictSet.setCircleColor(MAGENTA)
-            predictSet.fillColor = MAGENTA
-            predictSet.fillAlpha = 110
-            predictSet.setDrawValues(false)
-            predictSet.setDrawFilled(true)
+            predictSet.apply {
+                color = MAGENTA
+                setCircleColor(MAGENTA)
+                fillColor = MAGENTA
+                fillAlpha = 110
+                setDrawValues(false)
+                setDrawFilled(true)
+            }
             dataSets.add(predictSet)
         }
 

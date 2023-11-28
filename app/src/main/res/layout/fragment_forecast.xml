@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray">
+    android:background="@color/black">
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -30,6 +30,7 @@
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -43,6 +44,7 @@
                 android:hint="Tỉ lệ tăng giảm"
                 android:textAlignment="center"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvLastPrice"
@@ -56,6 +58,7 @@
                 android:hint="Ngày"
                 android:textAlignment="center"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvProfitabilityRate"
@@ -69,6 +72,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/open"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvLastDay" />
 
@@ -80,6 +84,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvOpen"
                 app:layout_constraintTop_toTopOf="@+id/tvOpen" />
@@ -92,6 +97,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/max"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvOpen" />
 
@@ -103,6 +109,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvMax"
                 app:layout_constraintTop_toTopOf="@+id/tvMax" />
@@ -115,6 +122,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/min"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMax" />
 
@@ -126,6 +134,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvMin"
                 app:layout_constraintTop_toTopOf="@+id/tvMin" />
@@ -138,6 +147,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/close"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMin" />
 
@@ -149,6 +159,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvClose"
                 app:layout_constraintTop_toTopOf="@+id/tvClose" />
@@ -161,6 +172,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/weight"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvClose" />
 
@@ -172,6 +184,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvWeight"
                 app:layout_constraintTop_toTopOf="@+id/tvWeight" />
@@ -185,6 +198,7 @@
                 android:maxLines="2"
                 android:text="@string/max_in_three_month"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvWeight" />
 
@@ -196,6 +210,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvMaxInThreeMonth"
                 app:layout_constraintTop_toTopOf="@+id/tvMaxInThreeMonth" />
@@ -209,6 +224,7 @@
                 android:maxLines="2"
                 android:text="@string/min_in_three_month"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMaxInThreeMonth" />
 
@@ -220,6 +236,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvMinInThreeMonth"
                 app:layout_constraintTop_toTopOf="@+id/tvMinInThreeMonth" />
@@ -232,6 +249,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/average_volume"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMinInThreeMonth" />
 
@@ -242,6 +260,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvAverageVolume"
                 app:layout_constraintTop_toTopOf="@+id/tvAverageVolume" />
@@ -251,8 +270,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="#DDDDDD"
                 android:padding="8dp"
+                android:background="@color/black"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -263,35 +282,41 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_weight="1"
+                    android:background="@color/black"
                     tools:ignore="Suspicious0dp">
                     <TextView
                         android:id="@+id/tvOpenInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Open: "/>
+                        android:text="Open: "
+                        android:textColor="@color/white"/>
 
                     <TextView
                         android:id="@+id/tvCloseInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Close: "/>
+                        android:text="Close: "
+                        android:textColor="@color/white"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_weight="1"
+                    android:background="@color/black"
                     tools:ignore="Suspicious0dp">
                     <TextView
                         android:id="@+id/tvMaxInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Max: "/>
+                        android:text="Max: "
+                        android:textColor="@color/white"/>
                     <TextView
                         android:id="@+id/tvMinInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Min: "/>
+                        android:text="Min: "
+                        android:textColor="@color/white"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -301,7 +326,7 @@
                 android:layout_height="300dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:background="#DDDDDD"
+                android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvAverageVolume"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
@@ -313,6 +338,7 @@
                 android:layout_marginTop="12dp"
                 android:textSize="16sp"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/lineChart" />
@@ -326,6 +352,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="@string/stock_code_info"
                 android:textSize="20sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -341,6 +368,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="@string/stock_code_info"
                 android:textSize="18sp"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -365,6 +393,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/stock_code"
+            android:textAlignment="center"
             android:textColor="@color/teal_700"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
