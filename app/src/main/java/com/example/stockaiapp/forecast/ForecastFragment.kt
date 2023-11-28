@@ -119,18 +119,22 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
             tvWeightValue.text = content.totalVolume
             tvAverageVolumeValue.text = content.averageVolume
 
-            if (stockInfo.first != null && stockInfo.second != null) {
-                setLineChart(stockInfo.first!!, stockInfo.second!!)
+            if (stockInfo.first != null) {
+                setLineChart(stockInfo.first!!, stockInfo.second)
             }
         }
     }
 
-    private fun setLineChart(stockInfo: StockInfo, predict: Predict) {
+    private fun setLineChart(stockInfo: StockInfo, predict: Predict?) {
+        binding.lineChart.clear()
         val values = mutableListOf<String>()
         val yValue: ArrayList<Entry> = ArrayList()
         for (i in 0..<90) {
             yValue.add(Entry(i.toFloat(), stockInfo.takeLast(90)[i].Close.toFloat()))
             values.add(stockInfo.takeLast(90)[i].Date.replace("2023-", ""))
+        }
+        repeat(30) {
+            values.add("")
         }
         val set = LineDataSet(yValue, "Close")
         set.fillAlpha = 110
@@ -141,20 +145,21 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
         val dataSets: ArrayList<ILineDataSet> = ArrayList()
         dataSets.add(set)
 
-        val predictYValue: ArrayList<Entry> = ArrayList()
-        predict.toList().forEachIndexed { index, i ->
-            predictYValue.add(Entry((index + 89).toFloat(), i.`0`.toFloat()))
-            values.add("")
+        predict?.let { predictData ->
+            val predictYValue: ArrayList<Entry> = ArrayList()
+            for (i in 0..<predictData.size) {
+                predictYValue.add(Entry((i+89).toFloat(), predictData[i].`0`.toFloat()))
+            }
+            val predictSet = LineDataSet(predictYValue, "Close")
+            predictSet.color = Color.MAGENTA
+            predictSet.fillColor = Color.MAGENTA
+            predictSet.fillAlpha = 110
+            predictSet.setDrawValues(false)
+            predictSet.setDrawCircles(false)
+            predictSet.setDrawCircleHole(false)
+            predictSet.setDrawFilled(true)
+            dataSets.add(predictSet)
         }
-        val predictSet = LineDataSet(predictYValue, "Close")
-        predictSet.color = Color.MAGENTA
-        predictSet.fillColor = Color.MAGENTA
-        predictSet.fillAlpha = 110
-        predictSet.setDrawValues(false)
-        predictSet.setDrawCircles(false)
-        predictSet.setDrawCircleHole(false)
-        predictSet.setDrawFilled(true)
-        dataSets.add(predictSet)
 
         val data = LineData(dataSets)
         binding.lineChart.apply {
@@ -297,12 +302,22 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
     @SuppressLint("SetTextI18n")
     override fun onValueSelected(e: Entry?, h: Highlight?) {
         binding.apply {
-            val item = viewModel.stockInfo.value?.first?.takeLast(90)?.get(e?.x?.toInt() ?: 0)
-            item?.let {
-                tvCloseInfo.text = "Close: ${item.Close}"
-                tvOpenInfo.text = "Open: ${item.Open}"
-                tvMaxInfo.text = "Max: ${item.High}"
-                tvMinInfo.text = "Min: ${item.Low}"
+            if ((e?.x?.toInt() ?: 0) < 90) {
+                val item = viewModel.stockInfo.value?.first?.takeLast(90)?.get(e?.x?.toInt() ?: 0)
+                item?.let {
+                    tvCloseInfo.text = "Close: ${item.Close}"
+                    tvOpenInfo.text = "Open: ${item.Open}"
+                    tvMaxInfo.text = "Max: ${item.High}"
+                    tvMinInfo.text = "Min: ${item.Low}"
+                }
+            } else {
+                val item = viewModel.stockInfo.value?.second?.get((e?.x?.toInt() ?: 0) - 89)
+                item?.let {
+                    tvCloseInfo.text = "Close: ${item.`0`.toInt()}"
+                    tvOpenInfo.text = "Open: "
+                    tvMaxInfo.text = "Max: "
+                    tvMinInfo.text = "Min: "
+                }
             }
         }
     }
