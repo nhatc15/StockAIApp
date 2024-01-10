@@ -204,7 +204,8 @@ class ForecastFragment : Fragment(), OnChartValueSelectedListener {
             autoCompleteTextView.apply {
                 setText(getString(R.string.stock_code, companyData.first().ticker))
                 setOnItemClickListener { parent, view, position, id ->
-                    viewModel.updateStockCode(companyData[position])
+                    companyData.find { it.ticker == text.toString() }
+                        ?.let { viewModel.updateStockCode(it) }
                     autoCompleteTextView.clearFocus()
                     this@ForecastFragment.hideKeyboard()
                 }
